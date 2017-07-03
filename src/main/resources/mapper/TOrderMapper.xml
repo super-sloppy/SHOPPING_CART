@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wukai.shopping.dao.TOrderMapper" >
+  <resultMap id="BaseResultMap" type="com.wukai.shopping.model.TOrder" >
+    <constructor >
+      <idArg column="ID" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="BUYER_ID" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="GOOD_ID" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="GOOD_NUM" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="TOTAL_PRICE" jdbcType="DOUBLE" javaType="java.lang.Double" />
+      <arg column="ORDER_STATU" jdbcType="INTEGER" javaType="java.lang.Integer" />
+    </constructor>
+  </resultMap>
+
+  <resultMap id="allOrderMap" type="com.wukai.shopping.model.TOrder">
+      <id property="id" column="ID"/>
+    <result property="buyerId" column="BUYER_ID"/>
+    <result property="goodId" column="GOOD_ID"/>
+    <result property="goodNum" column="GOOD_NUM"/>
+    <result property="totalPrice" column="TOTAL_PRICE"/>
+    <result property="orderStatu" column="ORDER_STATU"/>
+    
+    <association property="user" javaType="com.wukai.shopping.model.TUser">
+      <id property="id" column="BUYER_ID"/>
+      <result property="userName" column="USER_NAME"/>
+      <result property="userPassword" column="USER_PASSWORD"/>
+      <result property="userQusetion" column="USER_QUSETION"/>
+      <result property="userAnswer" column="USER_ANSWER"/>
+      <result property="userLevel" column="USER_LEVEL"/>
+    </association>
+    <association property="good" javaType="com.wukai.shopping.model.TGood">
+      <id property="id" column="GOOD_ID"/>
+      <result property="goodName" column="GOOD_NAME"/>
+      <result property="goodIntro" column="GOOD_INTRO"/>
+      <result property="goodPrice" column="GOOD_PRICE"/>
+      <result property="imageUrl" column="IMAGE_URL"/>
+    </association>
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    ID, BUYER_ID, GOOD_ID, GOOD_NUM, TOTAL_PRICE,ORDER_STATU
+  </sql>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_order
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_order
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.wukai.shopping.model.TOrder" >
+    insert into t_order (ID, BUYER_ID, GOOD_ID, 
+      GOOD_NUM, TOTAL_PRICE,ORDER_STATU)
+    values (#{id,jdbcType=INTEGER}, #{buyerId,jdbcType=INTEGER}, #{goodId,jdbcType=INTEGER}, 
+      #{goodNum,jdbcType=INTEGER}, #{totalPrice,jdbcType=DOUBLE},#{orderStatu,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wukai.shopping.model.TOrder" >
+    insert into t_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="buyerId != null" >
+        BUYER_ID,
+      </if>
+      <if test="goodId != null" >
+        GOOD_ID,
+      </if>
+      <if test="goodNum != null" >
+        GOOD_NUM,
+      </if>
+      <if test="totalPrice != null" >
+        TOTAL_PRICE,
+      </if>
+      <if test="orderStatu != null" >
+        ORDER_STATU,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="buyerId != null" >
+        #{buyerId,jdbcType=INTEGER},
+      </if>
+      <if test="goodId != null" >
+        #{goodId,jdbcType=INTEGER},
+      </if>
+      <if test="goodNum != null" >
+        #{goodNum,jdbcType=INTEGER},
+      </if>
+      <if test="totalPrice != null" >
+        #{totalPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="orderStatu != null" >
+        #{orderStatu,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wukai.shopping.model.TOrder" >
+    update t_order
+    <set >
+      <if test="buyerId != null" >
+        BUYER_ID = #{buyerId,jdbcType=INTEGER},
+      </if>
+      <if test="goodId != null" >
+        GOOD_ID = #{goodId,jdbcType=INTEGER},
+      </if>
+      <if test="goodNum != null" >
+        GOOD_NUM = #{goodNum,jdbcType=INTEGER},
+      </if>
+      <if test="totalPrice != null" >
+        TOTAL_PRICE = #{totalPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="orderStatu != null" >
+        ORDER_STATU = #{orderStatu,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wukai.shopping.model.TOrder" >
+    update t_order
+    set BUYER_ID = #{buyerId,jdbcType=INTEGER},
+      GOOD_ID = #{goodId,jdbcType=INTEGER},
+      GOOD_NUM = #{goodNum,jdbcType=INTEGER},
+      TOTAL_PRICE = #{totalPrice,jdbcType=DOUBLE},
+      ORDER_STATU = #{orderStatu,jdbcType=DOUBLE}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    SELECT * FROM t_order WHERE ORDER_STATU=1
+  </select>
+
+  <select id="selectOrder" resultMap="allOrderMap">
+    SELECT torder.*,tuser.*,tgood.* FROM t_order torder, t_user tuser, t_good tgood WHERE tuser.ID=torder.BUYER_ID AND tgood.ID=torder.GOOD_ID AND torder.ORDER_STATU='1'
+  </select>
+
+  <!--<select id="selectOrderByUser"resultMap="allOrderMap" parameterType="java.lang.Integer" >-->
+    <!--SELECT torder.*,tuser.*,tgood.* FROM t_order torder, t_user tuser, t_good tgood WHERE tuser.ID=torder.BUYER_ID AND tgood.ID=torder.GOOD_ID AND torder.ORDER_STATU='1' AND BUYER_ID=#{id,jdbcType=INTEGER}-->
+  <!--</select>-->
+  <select id="selectOrderByUser" resultMap="allOrderMap" parameterType="java.lang.Integer" >
+
+    SELECT torder.*,tuser.*,tgood.* FROM t_order torder, t_user tuser, t_good tgood WHERE tuser.ID=torder.BUYER_ID AND tgood.ID=torder.GOOD_ID AND torder.ORDER_STATU='1' AND BUYER_ID=#{id,jdbcType=INTEGER}
+
+  </select>
+
+
+
+  <select id="selectByUserIdC" resultMap="allOrderMap" parameterType="java.lang.Integer" >
+
+    SELECT torder.*,tuser.*,tgood.* FROM t_order torder, t_user tuser, t_good tgood WHERE tuser.ID=torder.BUYER_ID AND tgood.ID=torder.GOOD_ID AND torder.ORDER_STATU='0' AND BUYER_ID=#{id,jdbcType=INTEGER}
+
+  </select>
+</mapper>

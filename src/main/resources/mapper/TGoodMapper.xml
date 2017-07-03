@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wukai.shopping.dao.TGoodMapper" >
+  <resultMap id="BaseResultMap" type="com.wukai.shopping.model.TGood" >
+    <constructor >
+      <idArg column="ID" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="GOOD_NAME" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="GOOD_INTRO" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="GOOD_PRICE" jdbcType="DOUBLE" javaType="java.lang.Double" />
+      <arg column="IMAGE_URL" jdbcType="VARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, GOOD_NAME, GOOD_INTRO, GOOD_PRICE, IMAGE_URL
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_good
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_good
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.wukai.shopping.model.TGood" >
+    insert into t_good (ID, GOOD_NAME, GOOD_INTRO, 
+      GOOD_PRICE, IMAGE_URL)
+    values (#{id,jdbcType=INTEGER}, #{goodName,jdbcType=VARCHAR}, #{goodIntro,jdbcType=VARCHAR}, 
+      #{goodPrice,jdbcType=DOUBLE}, #{imageUrl,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wukai.shopping.model.TGood" >
+    insert into t_good
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="goodName != null" >
+        GOOD_NAME,
+      </if>
+      <if test="goodIntro != null" >
+        GOOD_INTRO,
+      </if>
+      <if test="goodPrice != null" >
+        GOOD_PRICE,
+      </if>
+      <if test="imageUrl != null" >
+        IMAGE_URL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="goodName != null" >
+        #{goodName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodIntro != null" >
+        #{goodIntro,jdbcType=VARCHAR},
+      </if>
+      <if test="goodPrice != null" >
+        #{goodPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="imageUrl != null" >
+        #{imageUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wukai.shopping.model.TGood" >
+    update t_good
+    <set >
+      <if test="goodName != null" >
+        GOOD_NAME = #{goodName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodIntro != null" >
+        GOOD_INTRO = #{goodIntro,jdbcType=VARCHAR},
+      </if>
+      <if test="goodPrice != null" >
+        GOOD_PRICE = #{goodPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="imageUrl != null" >
+        IMAGE_URL = #{imageUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wukai.shopping.model.TGood" >
+    update t_good
+    set GOOD_NAME = #{goodName,jdbcType=VARCHAR},
+      GOOD_INTRO = #{goodIntro,jdbcType=VARCHAR},
+      GOOD_PRICE = #{goodPrice,jdbcType=DOUBLE},
+      IMAGE_URL = #{imageUrl,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    SELECT * FROM t_good
+  </select>
+  
+
+
+</mapper>
